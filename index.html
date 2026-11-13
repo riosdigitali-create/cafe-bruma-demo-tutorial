@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Café Bruma · Sitio de demostración</title>
+<meta name="description" content="Café Bruma: cafetería ficticia de demostración con café de especialidad y pan recién horneado.">
+<style>
+  :root {
+    --crema: #f5ede0;
+    --crema-clara: #fbf6ec;
+    --crema-oscura: #eadcc6;
+    --cafe: #4a2f22;
+    --cafe-suave: #6d5243;
+    --oliva: #5b6730;
+    --oliva-oscuro: #444d22;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+  body {
+    margin: 0;
+    background: var(--crema);
+    color: var(--cafe);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.15; margin: 0; }
+  p { margin: 0 0 1rem; max-width: 62ch; }
+  a { color: var(--oliva-oscuro); }
+  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--oliva); outline-offset: 3px; border-radius: 4px; }
+  .wrap { width: min(100% - 2.5rem, 68rem); margin-inline: auto; }
+  section { padding: clamp(3rem, 8vw, 5.5rem) 0; }
+ 
+  /* Cabecera */
+  header.top {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(245, 237, 224, .94);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--crema-oscura);
+  }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .85rem 0; flex-wrap: wrap; }
+  .logo { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; text-decoration: none; color: var(--cafe); }
+  nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.4rem; flex-wrap: wrap; }
+  nav a { text-decoration: none; color: var(--cafe-suave); font-size: .98rem; padding: .25rem 0; border-bottom: 2px solid transparent; }
+  nav a:hover { color: var(--cafe); border-bottom-color: var(--oliva); }
+ 
+  /* Portada */
+  .hero { padding-top: clamp(2.5rem, 7vw, 5rem); }
+  .hero .wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: 2.5rem; align-items: center; }
+  .hero h1 { font-size: clamp(2.6rem, 7.5vw, 4.75rem); letter-spacing: -.02em; margin-bottom: 1.25rem; }
+  .hero p.lead { font-size: 1.2rem; color: var(--cafe-suave); margin-bottom: 1.75rem; }
+  .btn {
+    display: inline-block; background: var(--oliva); color: #fff;
+    padding: .8rem 1.5rem; border-radius: 999px; text-decoration: none; font-weight: 600;
+    transition: background .2s;
+  }
+  .btn:hover { background: var(--oliva-oscuro); }
+  .btn.sec { background: transparent; color: var(--cafe); border: 2px solid var(--cafe); margin-left: .6rem; }
+  .btn.sec:hover { background: var(--cafe); color: var(--crema); }
+ 
+  /* Taza con vapor (solo CSS) */
+  .taza-escena { display: flex; justify-content: center; padding: 1rem 0; }
+  .taza { position: relative; width: 15rem; height: 15rem; }
+  .vapor { position: absolute; top: 0; left: 0; right: 0; height: 6rem; }
+  .vapor span {
+    position: absolute; bottom: 0; width: 1.1rem; height: 5rem; border-radius: 50%;
+    background: var(--crema-oscura); filter: blur(7px); opacity: 0;
+    animation: subir 5s ease-in-out infinite;
+  }
+  .vapor span:nth-child(1) { left: 32%; }
+  .vapor span:nth-child(2) { left: 46%; animation-delay: 1.6s; }
+  .vapor span:nth-child(3) { left: 60%; animation-delay: 3.2s; }
+  @keyframes subir {
+    0%   { transform: translateY(1.5rem) scaleX(1); opacity: 0; }
+    30%  { opacity: .85; }
+    100% { transform: translateY(-2.5rem) scaleX(1.8); opacity: 0; }
+  }
+  .vaso {
+    position: absolute; bottom: 1.6rem; left: 1.5rem; width: 10.5rem; height: 7.5rem;
+    background: var(--cafe); border-radius: 0 0 5.25rem 5.25rem;
+  }
+  .vaso::before { /* café */
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1.1rem;
+    background: #2e1c14; border-radius: 50%; transform: translateY(-50%);
+  }
+  .vaso::after { /* asa */
+    content: ""; position: absolute; right: -2.9rem; top: 1.1rem; width: 3.4rem; height: 3.8rem;
+    border: .7rem solid var(--cafe); border-left: none; border-radius: 0 2.4rem 2.4rem 0;
+  }
+  .plato {
+    position: absolute; bottom: .9rem; left: 0; width: 13.5rem; height: 1.1rem;
+    background: var(--oliva); border-radius: 50%;
+  }
+ 
+  /* Presentación */
+  .presentacion { background: var(--crema-clara); border-block: 1px solid var(--crema-oscura); }
+  .presentacion .wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2.5rem; }
+  h2 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); }
+  .presentacion p { font-size: 1.08rem; }
+ 
+  /* Carta */
+  .carta h2 { margin-bottom: .5rem; }
+  .carta .nota { color: var(--cafe-suave); font-size: .95rem; margin-bottom: 2rem; }
+  .menu { list-style: none; margin: 0; padding: 0; max-width: 46rem; }
+  .menu li { padding: 1.4rem 0; border-bottom: 1px solid var(--crema-oscura); }
+  .menu li:first-child { border-top: 1px solid var(--crema-oscura); }
+  .menu .linea { display: flex; align-items: baseline; gap: .75rem; }
+  .menu h3 { font-size: 1.45rem; }
+  .menu .puntos { flex: 1; border-bottom: 2px dotted var(--cafe-suave); opacity: .45; transform: translateY(-.3rem); }
+  .menu .precio { font-family: var(--serif); font-size: 1.4rem; font-weight: 700; color: var(--oliva-oscuro); }
+  .menu p { margin: .35rem 0 0; color: var(--cafe-suave); }
+ 
+  /* Horario y contacto */
+  .info { background: var(--cafe); color: var(--crema); }
+  .info a { color: #dfe6b9; }
+  .info .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .info h2 { color: var(--crema-clara); margin-bottom: 1.25rem; }
+  .horario { width: 100%; border-collapse: collapse; }
+  .horario th, .horario td { text-align: left; padding: .7rem 0; border-bottom: 1px solid rgba(245, 237, 224, .22); font-weight: 400; }
+  .horario td { text-align: right; font-variant-numeric: tabular-nums; }
+  .contacto dl { margin: 0; }
+  .contacto dt { color: #d9c7b0; font-size: .92rem; margin-top: 1rem; }
+  .contacto dd { margin: .1rem 0 0; font-size: 1.1rem; }
+  .aviso { margin-top: 1.5rem; font-size: .92rem; color: #d9c7b0; }
+ 
+  footer { padding: 1.75rem 0; text-align: center; font-size: .92rem; color: var(--cafe-suave); }
+  footer p { margin: 0 auto; }
+ 
+  /* Móvil */
+  @media (max-width: 780px) {
+    .hero .wrap, .presentacion .wrap, .info .wrap { grid-template-columns: 1fr; gap: 2rem; }
+    .taza-escena { order: -1; padding: 0; }
+    .taza { transform: scale(.8); height: 12.5rem; }
+    .btn.sec { margin: .6rem 0 0; }
+    header.top .wrap { justify-content: center; }
+    nav ul { gap: 1.1rem; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .vapor span { animation: none; opacity: .5; transform: translateY(-1rem); }
+  }
+</style>
+</head>
+<body>
+ 
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#inicio">Café Bruma</a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#carta">Carta</a></li>
+        <li><a href="#horario">Horario</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+ 
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Café lento para mañanas con niebla.</h1>
+        <p class="lead">En Café Bruma tostamos en lotes pequeños y horneamos cada mañana. Pasa por una taza y quédate el rato que quieras.</p>
+        <a class="btn" href="#carta">Ver la carta</a>
+        <a class="btn sec" href="#horario">Ver horario</a>
+      </div>
+      <div class="taza-escena" aria-hidden="true">
+        <div class="taza">
+          <div class="vapor"><span></span><span></span><span></span></div>
+          <div class="vaso"></div>
+          <div class="plato"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <section class="presentacion" id="nosotros">
+    <div class="wrap">
+      <h2>Una cafetería pequeña con las ventanas empañadas.</h2>
+      <div>
+        <p>Café Bruma nació con una idea sencilla: que pedir un café sea una pausa y no una carrera. Elegimos granos de pequeños productores, los tostamos con calma y los preparamos al momento.</p>
+        <p>La cocina hornea pan y repostería todas las mañanas. Hay mesas junto a la ventana, enchufes para trabajar y una estantería con libros para quien quiera quedarse a leer.</p>
+      </div>
+    </div>
+  </section>
+ 
+  <section class="carta" id="carta">
+    <div class="wrap">
+      <h2>Lo que más se pide</h2>
+      <p class="nota">Precios de ejemplo en pesos mexicanos, solo para esta demostración.</p>
+      <ul class="menu">
+        <li>
+          <div class="linea"><h3>Flat white Bruma</h3><span class="puntos" aria-hidden="true"></span><span class="precio">$58</span></div>
+          <p>Doble espresso de tueste medio con leche texturizada y un toque de miel.</p>
+        </li>
+        <li>
+          <div class="linea"><h3>Cold brew con naranja</h3><span class="puntos" aria-hidden="true"></span><span class="precio">$62</span></div>
+          <p>Café infusionado 18 horas en frío, con rodaja de naranja y hielo.</p>
+        </li>
+        <li>
+          <div class="linea"><h3>Pan de elote con canela</h3><span class="puntos" aria-hidden="true"></span><span class="precio">$48</span></div>
+          <p>Horneado cada mañana, tibio y con mantequilla de la casa.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+ 
+  <section class="info">
+    <div class="wrap">
+      <div id="horario">
+        <h2>Horario</h2>
+        <table class="horario">
+          <tbody>
+            <tr><th scope="row">Lunes a viernes</th><td>7:30 – 19:00</td></tr>
+            <tr><th scope="row">Sábado</th><td>8:00 – 20:00</td></tr>
+            <tr><th scope="row">Domingo</th><td>9:00 – 15:00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="contacto" id="contacto">
+        <h2>Contacto</h2>
+        <dl>
+          <dt>Dirección</dt>
+          <dd>Calle Ejemplo 123, Colonia Demo, Guadalajara, Jalisco</dd>
+          <dt>Teléfono</dt>
+          <dd>33 0000 0000</dd>
+          <dt>Correo</dt>
+          <dd><a href="mailto:hola@cafebruma.example">hola@cafebruma.example</a></dd>
+          <dt>Instagram</dt>
+          <dd>@cafebruma.demo</dd>
+        </dl>
+        <p class="aviso">Datos de contacto ficticios: este sitio es un proyecto de prueba.</p>
+      </div>
+    </div>
+  </section>
+</main>
+ 
+<footer>
+  <div class="wrap">
+    <p>© 2026 Café Bruma. Cafetería ficticia creada como ejemplo para publicar en GitHub Pages.</p>
+  </div>
+</footer>
+ 
+</body>
+</html>
+ 
